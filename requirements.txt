@@ -1,0 +1,8 @@
+Flask
+pandas
+matplotlib
+seaborn
+wordcloud
+emoji
+urlextract
+numpy
