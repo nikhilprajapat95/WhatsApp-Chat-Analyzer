@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp Chat Analyzer - Upload</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container upload-container">
+        <header>
+            <h1>WhatsApp Chat Analyzer</h1>
+            <p>Upload your WhatsApp chat export (.txt or .zip) to get insights!</p>
+        </header>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="flash {{ category }}">{{ message }}</div>
+                {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <form action="{{ url_for('analyze_chat') }}" method="post" enctype="multipart/form-data">
+            <div class="file-input-wrapper">
+                <label for="chatfile" class="file-label">Choose File</label>
+                <input type="file" id="chatfile" name="chatfile" accept=".txt,.zip" required>
+                <span id="file-name-display">No file chosen</span>
+            </div>
+            <button type="submit" class="btn analyze-btn">Analyze Chat</button>
+        </form>
+
+        <footer>
+            <p>Make sure to export your chat 'Without Media' from WhatsApp.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Display chosen file name
+        const fileInput = document.getElementById('chatfile');
+        const fileNameDisplay = document.getElementById('file-name-display');
+        fileInput.addEventListener('change', function() {
+            if (fileInput.files.length > 0) {
+                fileNameDisplay.textContent = fileInput.files[0].name;
+            } else {
+                fileNameDisplay.textContent = 'No file chosen';
+            }
+        });
+    </script>
+</body>
+</html>

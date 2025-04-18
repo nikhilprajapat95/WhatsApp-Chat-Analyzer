@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp Chat Analysis Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container result-container">
+        <header class="result-header">
+            <h1>{{ chat_title }}</h1>
+            <a href="{{ url_for('index') }}" class="btn back-btn">Analyze Another Chat</a>
+        </header>
+
+        <!-- Stats Overview -->
+        <section class="analysis-section stats-overview">
+            <h2>Chat Statistics</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Total Messages</h3>
+                    <p>{{ num_messages }}</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Total Words</h3>
+                    <p>{{ num_words }}</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Media Shared</h3>
+                    <p>{{ num_media }}</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Links Shared</h3>
+                    <p>{{ num_links }}</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Timeline Analysis -->
+        <section class="analysis-section timeline-analysis">
+             <h2>Timelines</h2>
+             <div class="plot-container-grid">
+                {% if monthly_timeline_plot %}
+                <div class="plot-item">
+                    <h3>Monthly Timeline</h3>
+                    <img src="data:image/png;base64,{{ monthly_timeline_plot }}" alt="Monthly Message Timeline">
+                </div>
+                {% endif %}
+                {% if daily_timeline_plot %}
+                 <div class="plot-item">
+                    <h3>Daily Timeline</h3>
+                    <img src="data:image/png;base64,{{ daily_timeline_plot }}" alt="Daily Message Timeline">
+                </div>
+                {% endif %}
+            </div>
+        </section>
+
+         <!-- Activity Analysis -->
+        <section class="analysis-section activity-analysis">
+            <h2>Activity Patterns</h2>
+            <div class="plot-container-grid">
+                 {% if weekly_activity_plot %}
+                 <div class="plot-item">
+                     <h3>Most Busy Days</h3>
+                     <img src="data:image/png;base64,{{ weekly_activity_plot }}" alt="Weekly Activity">
+                 </div>
+                 {% endif %}
+                 {% if monthly_activity_plot %}
+                  <div class="plot-item">
+                     <h3>Most Busy Months</h3>
+                     <img src="data:image/png;base64,{{ monthly_activity_plot }}" alt="Monthly Activity">
+                 </div>
+                 {% endif %}
+             </div>
+             {% if heatmap_plot %}
+             <div class="plot-container-full"> <!-- Full width for heatmap -->
+                 <h3>Weekly Activity Heatmap</h3>
+                 <img src="data:image/png;base64,{{ heatmap_plot }}" alt="Activity Heatmap">
+             </div>
+             {% endif %}
+        </section>
+
+        <!-- User Analysis (Group Chats) -->
+        {% if most_busy_users_plot %}
+        <section class="analysis-section user-analysis">
+            <h2>User Activity (Group Chat)</h2>
+             <div class="plot-container-grid">
+                 <div class="plot-item">
+                     <h3>Most Active Users (Messages)</h3>
+                     <img src="data:image/png;base64,{{ most_busy_users_plot }}" alt="Most Busy Users">
+                 </div>
+                 <div class="table-item">
+                     <h3>Top User Stats</h3>
+                     {{ most_busy_users_data | safe }}
+                 </div>
+             </div>
+        </section>
+        {% endif %}
+
+
+        <!-- Content Analysis -->
+        <section class="analysis-section content-analysis">
+            <h2>Content Analysis</h2>
+             <div class="plot-container-grid">
+                {% if wordcloud_plot %}
+                 <div class="plot-item">
+                     <h3>Word Cloud</h3>
+                     <img src="data:image/png;base64,{{ wordcloud_plot }}" alt="Word Cloud">
+                 </div>
+                {% else %}
+                 <div class="plot-item"><p>Word cloud could not be generated (maybe too few words?).</p></div>
+                {% endif %}
+
+                {% if common_words_plot %}
+                 <div class="plot-item">
+                     <h3>Most Common Words</h3>
+                     <img src="data:image/png;base64,{{ common_words_plot }}" alt="Most Common Words Bar Chart">
+                 </div>
+                {% else %}
+                 <div class="plot-item"><p>No common words found to plot.</p></div>
+                {% endif %}
+             </div>
+             <div class="plot-container-grid"> <!-- New row for table + pie -->
+                 <div class="table-item">
+                     <h3>Top 20 Common Words List</h3>
+                     {{ common_words_data | safe }}
+                 </div>
+                 {% if emoji_plot %}
+                  <div class="plot-item">
+                      <h3>Emoji Analysis (Top 10)</h3>
+                      <img src="data:image/png;base64,{{ emoji_plot }}" alt="Emoji Distribution Pie Chart">
+                       <!-- Optional: Display Top Emojis as a list/table too -->
+                       <!-- <div class="top-emojis-list">
+                           <h4>Top Emojis Used:</h4>
+                           {{ emoji_data | safe }}
+                       </div> -->
+                  </div>
+                 {% else %}
+                  <div class="plot-item"><p>No emojis found to analyze.</p></div>
+                 {% endif %}
+            </div>
+        </section>
+
+        <footer>
+             <p><a href="{{ url_for('index') }}">Analyze Another Chat</a></p>
+        </footer>
+
+    </div>
+</body>
+</html>
